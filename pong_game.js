@@ -1,8 +1,8 @@
 
-var player1;
+let objects = [];
 
 window.onload = function () {
-    var canvas = document.getElementById("gl-canvas");
+    let canvas = document.getElementById("gl-canvas");
     gl = WebGLUtils.setupWebGL(canvas);
     if (!gl) {
         alert("yo");
@@ -12,22 +12,24 @@ window.onload = function () {
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0, 1.0, 0, 1);
 
-
-    player1 = new Player("asd");
-    player1.initialize(vec2(0, 0), 0.2, 0.2);
-
+    objects.push( new Player( "P_1", vec2(0, 0), 0.15, 0.15, 0.1 ) );       //  s
+    objects.push( new Player( "P_2", vec2(0, 0), 0.25, 0.25, 0.1/60 ) );    //  m
+    objects.push( new Player( "P_2", vec2(0, 0), 0.30, 0.30, 0.1/60/60 ) ); //  h
 
     gameLoop();
 }
 
-var gameEnded= false;
-var gameLoop = function(){
+let gameEnded = false;
+const gameLoop = function(){
     gl.clear(gl.COLOR_BUFFER_BIT);
     
     if(!gameEnded)
     {
-        player1.update();
-        player1.draw();
+        for( let obj of objects ) { 
+            obj.update();
+            obj.draw();
+        }
+
         window.requestAnimationFrame(gameLoop);
     }
     else

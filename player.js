@@ -1,26 +1,24 @@
-var Player = function (playerName) {
-    var player = {};
-    player.name = playerName;
-    player.score = 0;
-    player.width = 1;
-    var program;
-    var rectangle;
-    player.initialize = function (center, width, height) {
+class Player {
+    
+    constructor( name, center, width, height, speed ) {
+        this.name = name;
+        this.x = center[0];
+        this.y = center[1];
+        this.speed = speed;
+        this.score = 0;
 
-        program = initShaders(gl, "vertex-shader", "fragment-shader");
-        program.x = gl.getUniformLocation(program, "time");
-        rectangle = new Rectangle(program);
-        rectangle.initialize(center, width, height );
-    }
-    var posX = 0;
-    player.draw = function () {
-        rectangle.draw(posX);
+        this.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
+        this.program.x = gl.getUniformLocation( this.program, 'x' );
+        this.program.y = gl.getUniformLocation( this.program, 'y' );
+
+        this.rectangle = new Rectangle( center, width, height, this.program );
     }
 
-    player.update = function(){
-        posX += 0.01;
+    draw() {
+        this.rectangle.draw( this.x, this.y );
     }
 
-
-    return player;
+    update() {
+        this.x += this.speed;
+    }
 }

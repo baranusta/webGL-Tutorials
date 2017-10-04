@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <title>PONG</title>
+
 <script id="vertex-shader" type="x-shader/x-vertex">
     attribute vec3 vPosition; 
-    uniform float time;
+    uniform float x;
 
     varying mediump float val;
 
     void main() { 
         vec3 pos = vPosition;
-        pos.x += sin(time);
-        pos.y += cos(time);
-        val = sin(time) * 1.0;
+        pos.x += sin(x);
+        pos.y += cos(x);
+        val = sin(x) * 1.0;
         gl_Position = vec4(pos,1); 
     }
 </script>
@@ -30,9 +35,13 @@
 <script type="text/javascript" src="rectangle.js"></script>
 <script type="text/javascript" src="player.js"></script>
 <script type="text/javascript" src="pong_game.js"></script>
+
+</head>
+
 <body>
-<canvas id="gl-canvas" width="512" " height="512 ">
-Oops ... your browser doesn't support the HTML5 canvas element
-</canvas>
+    <canvas id="gl-canvas" width="512" height="512">
+        Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
 </body>
+
 </html>
