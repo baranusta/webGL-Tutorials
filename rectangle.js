@@ -27,6 +27,7 @@ var Rectangle = function(p){
         gl.uniform1f(program.x, posX);
         gl.bindBuffer(gl.ARRAY_BUFFER, vao);
         gl.enableVertexAttribArray(vaoAttrib);
+        gl.vertexAttribPointer(vaoAttrib, 2, gl.FLOAT, false, 0, 0);
         console.log(gl.NO_ERROR == gl.getError());
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
