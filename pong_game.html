@@ -1,39 +1,37 @@
 <!DOCTYPE html>
 <html>
-
-<title>Pong</title>
-
 <script id="vertex-shader" type="x-shader/x-vertex">
-attribute vec2 vPosition;
-uniform float time;
+    attribute vec3 vPosition; 
+    uniform float time;
 
-void main()
-{
-    gl_Position = vec4(vPosition,0,1);
-    gl_Position.x += time * 0.001;
-}
+    varying mediump float val;
+
+    void main() { 
+        vec3 pos = vPosition;
+        pos.x += sin(time);
+        pos.y += cos(time);
+        val = sin(time) * 1.0;
+        gl_Position = vec4(pos,1); 
+    }
 </script>
-
 <script id="fragment-shader" type="x-shader/x-fragment">
+    
+    varying mediump float val;
 
-precision mediump float;
-
-void main()
-{
-    gl_FragColor = vec4( 0.0, 0.0, 0.0, 1.0 );
-}
+    void main() { 
+        gl_FragColor = vec4(abs(val),abs(val),0,1); 
+    }
+    
 </script>
 
 <script type="text/javascript" src="Common/webgl-utils.js"></script>
 <script type="text/javascript" src="Common/initShaders.js"></script>
 <script type="text/javascript" src="Common/MV.js"></script>
+<script type="text/javascript" src="rectangle.js"></script>
 <script type="text/javascript" src="player.js"></script>
-<script type="text/javascript" src="pong_game.js"></script>
-</head>
-
+<script type="text/javascript" src="index.js"></script>
 <body>
-
-<canvas id="gl-canvas" width="512" height="512">
+<canvas id="gl-canvas" width="512" " height="512 ">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
 </body>
