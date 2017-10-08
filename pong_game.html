@@ -7,15 +7,15 @@
 
 <script id="vertex-shader" type="x-shader/x-vertex">
     attribute vec3 vPosition; 
-    uniform float x;
+    uniform float time;
 
     varying mediump float val;
 
     void main() { 
         vec3 pos = vPosition;
-        pos.x += sin(x);
-        pos.y += cos(x);
-        val = sin(x) * 1.0;
+        pos.x += sin(time);
+        pos.y += cos(time);
+        val = sin(time) * 1.0;
         gl_Position = vec4(pos,1); 
     }
 </script>

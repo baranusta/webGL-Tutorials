@@ -1,24 +1,21 @@
 class Player {
     
-    constructor( name, center, width, height, speed ) {
+    constructor( name, center, width, height ) {
         this.name = name;
-        this.x = center[0];
-        this.y = center[1];
-        this.speed = speed;
+        this.x = 0;
         this.score = 0;
 
         this.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
-        this.program.x = gl.getUniformLocation( this.program, 'x' );
-        this.program.y = gl.getUniformLocation( this.program, 'y' );
+        this.program.x = gl.getUniformLocation( this.program, 'time' );
 
         this.rectangle = new Rectangle( center, width, height, this.program );
     }
 
     draw() {
-        this.rectangle.draw( this.x, this.y );
+        this.rectangle.draw( this.x );
     }
 
     update() {
-        this.x += this.speed;
+        this.x += 0.01;
     }
 }
