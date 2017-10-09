@@ -1,38 +1,40 @@
-var Rectangle = function(p){
-    var rectangle={};
-    var program = p;
-    var vao;
-    var vaoAttrib;
+class Rectangle {
+    
+    constructor( center, width, height, program ) {
+        this.program = program;
 
-    rectangle.initialize = function(center, width, height){
-        vao = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, vao);
-        var vertices = [
+        this.vao = gl.createBuffer();
+        gl.bindBuffer( gl.ARRAY_BUFFER, this.vao );
+        
+        let vertices = [
             vec2(center[0] + width / 2, center[1] + height / 2),
             vec2(center[0] + width / 2, center[1] - height / 2),
             vec2(center[0] - width / 2, center[1] + height / 2),
             vec2(center[0] - width / 2, center[1] - height / 2)
         ];
-        gl.bufferData(gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW);
-        vaoAttrib = gl.getAttribLocation(program, "vPosition");
-        gl.enableVertexAttribArray(vaoAttrib);
-        gl.vertexAttribPointer(vaoAttrib, 2, gl.FLOAT, false, 0, 0);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    }
-
-    rectangle.draw = function(posX){
-        gl.useProgram(program);
         
-        gl.uniform1f(program.x, posX);
-        gl.bindBuffer(gl.ARRAY_BUFFER, vao);
-        gl.enableVertexAttribArray(vaoAttrib);
-        gl.vertexAttribPointer(vaoAttrib, 2, gl.FLOAT, false, 0, 0);
-        console.log(gl.NO_ERROR == gl.getError());
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        gl.bufferData( gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW );
+        
+        this.vao_attr = gl.getAttribLocation( this.program, 'vPosition' );
+        gl.enableVertexAttribArray( this.vao_attr );
+        gl.vertexAttribPointer( this.vao_attr, 2, gl.FLOAT, false, 0, 0 );
+
+        gl.bindBuffer( gl.ARRAY_BUFFER, null );
     }
 
-//     var indicesArray = [0, 3, 1, 1, 3, 2];
+    draw( x ) {
+        gl.useProgram( this.program );
+
+        gl.uniform1f( this.program.x, x );
+
+        gl.bindBuffer( gl.ARRAY_BUFFER, this.vao );
+        gl.enableVertexAttribArray( this.vao_attr );
+        gl.vertexAttribPointer( this.vao_attr, 2, gl.FLOAT, false, 0, 0 );
+
+        gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+    }
+
+//     let indicesArray = [0, 3, 1, 1, 3, 2];
 //     ebo = gl.createBuffer();
 //     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo);
 //     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,  new Uint16Array(indicesArray), gl.STATIC_DRAW);
@@ -41,8 +43,8 @@ var Rectangle = function(p){
 //     console.log(gl.getError() == gl.NO_ERROR);
 // };
 
-// player.draw = function(program){
-//     gl.useProgram(program);
+// draw( program ){
+//     gl.useProgram( program );
 
 //     //gl.uniform1f(program.time, 100);
 
@@ -53,6 +55,4 @@ var Rectangle = function(p){
 
 //     gl.drawElements( gl.TRIANGLES, 6, gl.UNSIGNED_SHORT,0);
 //     console.log(gl.getError() == gl.NO_ERROR);
-
-    return rectangle;
 }
