@@ -6,40 +6,68 @@
     <title>PONG</title>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
-    attribute vec3 vPosition; 
-    uniform float time;
+    attribute vec2 vPosition;
 
-    varying mediump float val;
+    uniform mediump vec2 displacement;
 
     void main() { 
-        vec3 pos = vPosition;
-        pos.x += sin(time);
-        pos.y += cos(time);
-        val = sin(time) * 1.0;
-        gl_Position = vec4(pos,1); 
+        gl_Position = vec4(vPosition + displacement,0,1); 
     }
 </script>
 <script id="fragment-shader" type="x-shader/x-fragment">
     
-    varying mediump float val;
-
     void main() { 
-        gl_FragColor = vec4(abs(val),abs(val),0,1); 
+        gl_FragColor = vec4(0.0,0.0,0.0,1.0); 
     }
     
 </script>
+
+<script id="vertex-shader-circle" type="x-shader/x-vertex">
+attribute vec2 vPosition; 
+
+uniform mediump vec2 displacement;
+
+varying mediump vec2 center;
+
+
+void main() { 
+    center = displacement + vPosition;
+    gl_Position = vec4(center,0.0,1.0); 
+    gl_PointSize = 100.0;
+}
+</script>
+<script id="fragment-shader-circle" type="x-shader/x-fragment">
+    
+    varying mediump vec2 center;
+
+    uniform mediump float radius;
+    uniform mediump vec2 screenSize;
+    
+
+void main() { 
+    highp vec2 normalizedFragCoord = (gl_FragCoord.xy/screenSize) * 2.0 -1.0;
+    highp vec2 dif = normalizedFragCoord - center;
+    dif.x *= screenSize.x / screenSize.y;
+    if(dot(dif,dif) > radius * radius)
+        discard;
+    gl_FragColor = vec4(0.0,0.0,0,1); 
+}
+
+</script>
+
 
 <script type="text/javascript" src="Common/webgl-utils.js"></script>
 <script type="text/javascript" src="Common/initShaders.js"></script>
 <script type="text/javascript" src="Common/MV.js"></script>
 <script type="text/javascript" src="rectangle.js"></script>
+<script type="text/javascript" src="ball.js"></script>
 <script type="text/javascript" src="player.js"></script>
 <script type="text/javascript" src="pong_game.js"></script>
 
 </head>
 
 <body>
-    <canvas id="gl-canvas" width="512" height="512">
+    <canvas id="gl-canvas" width="1024" height="512">
         Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
 </body>
