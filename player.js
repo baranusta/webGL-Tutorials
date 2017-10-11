@@ -3,10 +3,10 @@ class Player {
     constructor( name, center, width, height ) {
         this.name = name;
         this.displacement = [0.0,0.0];
-        this.center = center;
-        this.size = [width,height];
         this.speedY = 0.0;
         this.score = 0;
+        this.center = center;
+        this.size = [width,height];
 
         this.program = initShaders( gl, 'vertex-shader', 'fragment-shader' );
         this.program.displacement = gl.getUniformLocation( this.program, 'displacement' );
@@ -19,7 +19,6 @@ class Player {
     }
 
     update() {
-        //console.log(this.displacement);
         this.displacement[1] += this.speedY;
     }
 
@@ -40,14 +39,15 @@ class Player {
     }
 
     keepInField(){
-        if(this.displacement[1] + this.size[1]/2.0 > 1){
-            this.displacement[1] = 1 - this.size[1]/2.0;  
-            this.speedY = 0.0;    
+        if(this.center[1] + this.displacement[1] + this.size[1]/2.0 > 1.0)
+        {
+            this.displacement[1] = 1 - this.size[1]/2.0 - this.center[1];
+            this.speedY = 0.0;
         }
-        
-        if(this.displacement[1] - this.size[1]/2.0 < -1){
-            this.displacement[1] = -1 + this.size[1]/2.0;  
-            this.speedY = 0.0;    
+        if(this.center[1] + this.displacement[1] - this.size[1]/2.0 < -1.0)
+        {
+            this.displacement[1] = -1 + this.size[1]/2.0 - this.center[1];
+            this.speedY = 0.0;
         }
     }
 }
