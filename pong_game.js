@@ -22,17 +22,16 @@ window.onload = function () {
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0, 1.0, 0, 1);
 
-    player_1 = new Player( "P_1", vec2(-.9, 0), 0.1, 0.4 );
-    player_2 = new Player( "P_2", vec2(+.9, 0), 0.1, 0.4 );
+    player_1 = new Player( "P_1", vec2(-.85, 0), 0.1, 0.4 );
+    player_2 = new Player( "P_2", vec2(+.85, 0), 0.1, 0.4 );
     
     ball = new Ball("ball", vec2(0,0),0.1);
     gameLoop();
 }
 
-const updateScores = function(p1Score, p2Score){
-    console.log('player 1: ' + p1Score + ' - player 2: ' + p2Score);
+const updateScore = function(p1_Score, p2_Score){
+    console.log("p1: " + p1_Score + " - p2: " + p2_Score);
 }
-
 
 const gameLoop = function(){
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -59,21 +58,22 @@ const gameLoop = function(){
         player_2.keepInField();
         ball.keepInField();
 
+
         ball.collideWith(player_1);
         ball.collideWith(player_2);
-        
-        ball.passed(1.0, function(){
+
+        ball.passed( 1.0, function(){
             player_1.score += 1;
-            updateScores(player_1.score, player_2.score); 
             ball.resetPos();
+            updateScore(player_1.score,player_2.score);
         });
+
         ball.passed(-1.0, function(){
             player_2.score += 1;
-            updateScores(player_1.score, player_2.score); 
             ball.resetPos();
+            updateScore(player_1.score,player_2.score);            
         });
-
-
+        
         player_1.draw();
         player_2.draw();
         ball.draw(screenSize);
@@ -88,7 +88,6 @@ const gameLoop = function(){
 
 document.onkeydown = function(e)
 {
-    console.log(e.keyCode);
     if(e.keyCode == 38){
         player1PressedU = true;
     }
@@ -101,8 +100,6 @@ document.onkeydown = function(e)
     if(e.keyCode == 40){
         player2PressedD = true;
     }
-    // console.log(playerPressedU)
-    // console.log(playerPressedD)
     
 }
 
@@ -117,9 +114,7 @@ document.onkeyup = function(e)
     if(e.keyCode == 38){
         player2PressedU = false;
     }
-    if(e.keyCode == 40){
+    if(e.keyCode == 40){        
         player2PressedD = false;
     }
-    // console.log(playerPressedU)
-    // console.log(playerPressedD)
 }
