@@ -36,6 +36,46 @@ class Ball{
 
     update()
     {
-        this.displacement += this.speed;
+        this.displacement[0] += this.speed[0];
+        this.displacement[1] += this.speed[1];
+    }
+
+    keepInField(){
+        if(this.displacement[1] + this.radius > 1){
+            this.displacement[1] = 1 - this.radius;  
+            this.speed[1] *= -1.0;    
+        }
+        
+        if(this.displacement[1] - this.radius < -1){
+            this.displacement[1] = -1 + this.radius;  
+            this.speed[1] *= -1.0;
+        }
+    }
+
+    collideWith(player){
+        var xMin = player.center[0] - player.size[0]/2.0;
+        var xMax = player.center[0] + player.size[0]/2.0;
+        var yMin = player.center[1] - player.size[1]/2.0;
+        var yMax = player.center[1] + player.size[1]/2.0;
+        let isCollided = this.displacement[0] + this.radius > xMin && this.displacement[0] - this.radius < xMax; 
+        isCollided &= this.displacement[1] + this.radius > yMin && this.displacement[1] - this.radius < yMax; 
+
+        if(isCollided)
+        {
+            this.displacement[0] -= this.displacement[0] + this.radius - xMin;
+            this.speed[0] *= -1.0;
+        }
+    }
+
+    passed(lineY, func){
+        if(this.displacement[0] > lineY && this.displacement[0] - this.radius < lineY){
+            func()
+        }
+        else if(this.displacement[0] < lineY && this.displacement[0] - this.radius > lineY)
+            func();
+    }
+
+    resetPos(){
+        this.displacement = [0.0,0.0];
     }
 }
