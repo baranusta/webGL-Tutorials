@@ -1,4 +1,5 @@
-var arm; 
+var arms = []; 
+var gameEnded = false;
 window.onload = function () {
     let canvas = document.getElementById("gl-canvas");
     gl = WebGLUtils.setupWebGL(canvas);
@@ -10,16 +11,19 @@ window.onload = function () {
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0, 1.0, 0, 1);
 
-    arm = new Arm(vec3(0.0,0.0,0.0), vec3(0.2,0.2,1));
-    midArm = new Arm(vec3(0.2,0.0,0.0), vec3(0.2,0.2,1));
-    var lowArm = new Arm(vec3(0.2,-0.05,0.0), vec3(0.2,0.3,1));
-    // arm.addChild(midArm);
-    // midArm.addChild(lowArm);
+    var size = 10;
+
+    for(var i = 0; i < size; i++) {
+        var add = 0.1;
+        if(i == 0) add = -0.7;
+        arms.push(new Arm(vec3(0.0 + add,0.0,0.0), vec3(0.1,0.05,1)));
+        if(i>0) {
+            arms[i-1].addChild(arms[i]);
+        }
+    }
+    
     gl.clear(gl.COLOR_BUFFER_BIT);
-    // arm.rotate(rotate(45,[0,0,1]));
-    // midArm.rotate(rotateZ(20));
-    // lowArm.rotate(rotateZ(-40));
-    draw();
+    gameLoop();
 }
 
 const transportOrigin = function(){
@@ -34,13 +38,32 @@ const transportObject = function(){
     arm.model = mult(rotateZ(15), arm.model);
 }
 const draw = function(){
-    transportObject();
-    arm.draw();
+    arms[0].draw();
 }
+
+var counter =0;
+var reverseMovement = false;
 
 const gameLoop = function(){
     gl.clear(gl.COLOR_BUFFER_BIT);
+    for(var i = 0 ; i < arms.length; i++) {
+        var speed = 0;
+        var multiplier = 1;
+
+        if(i%3 != 0) multiplier *= -1;
+        if(i%6 >= 3) multiplier *= -1;
+        if(reverseMovement) multiplier *= -1;
+
+        speed = (3 - i%3) * (Math.cos(counter * 0.0174532925 )) * multiplier / 3;
+
+        arms[i].model = mult(arms[i].model, rotateZ(speed));
+    }    
     
+    counter++;
+
+    console.log(counter);
+
+    draw();
     if(!gameEnded)
     {
         window.requestAnimationFrame(gameLoop);
