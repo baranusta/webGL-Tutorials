@@ -1,5 +1,8 @@
 var arms = []; 
 var gameEnded = false;
+var counter =0;
+var reverseMovement = false;
+
 window.onload = function () {
     let canvas = document.getElementById("gl-canvas");
     gl = WebGLUtils.setupWebGL(canvas);
@@ -14,9 +17,9 @@ window.onload = function () {
     var size = 10;
 
     for(var i = 0; i < size; i++) {
-        var add = 0.1;
-        if(i == 0) add = -0.7;
-        arms.push(new Arm(vec3(0.0 + add,0.0,0.0), vec3(0.1,0.05,1)));
+        var offset = 0.1;
+        if(i == 0) offset = -0.7;
+        arms.push(new Arm(vec3(0.0 + offset,0.0,0.0), vec3(0.1,0.05,1)));
         if(i>0) {
             arms[i-1].addChild(arms[i]);
         }
@@ -38,14 +41,10 @@ const transportObject = function(){
     arm.model = mult(rotateZ(15), arm.model);
 }
 const draw = function(){
-    arms[0].draw();
+    arm.draw();
 }
 
-var counter =0;
-var reverseMovement = false;
-
-const gameLoop = function(){
-    gl.clear(gl.COLOR_BUFFER_BIT);
+const animateSnake = function() {
     for(var i = 0 ; i < arms.length; i++) {
         var speed = 0;
         var multiplier = 1;
@@ -61,9 +60,14 @@ const gameLoop = function(){
     
     counter++;
 
-    console.log(counter);
+    arms[0].draw();
+}
 
-    draw();
+const gameLoop = function(){
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    animateSnake();
+
     if(!gameEnded)
     {
         window.requestAnimationFrame(gameLoop);
