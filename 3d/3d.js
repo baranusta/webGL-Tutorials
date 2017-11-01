@@ -21,11 +21,16 @@ var obj;
 var mvp;
 var pos = 0;
 
+var at = vec3(0.5, 0.5,-0.5);
+var eye = vec3(0.5, 0.5,5);
+var toCam = subtract(eye, at);
+
 const gameLoop = function () {
     gl.clear(gl.COLOR_BUFFER_BIT);
-
-    console.log(pos);
-    var view = lookAt([pos,0,5],[pos,0,0], [0,1,0]);
+    var a = mult(rotateY(1), vec4(toCam, 1));
+    toCam = vec3(a[0],a[1],a[2]);
+    
+    var view = lookAt(add(at,toCam) , at, [0,1,0]);
     var proj = perspective(45,screenSize[1]/screenSize[0], 0.1, 10);
     
     mvp = mult(proj,view);
