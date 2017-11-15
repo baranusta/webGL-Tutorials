@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <title>Scene</title>
+
+<script id="vertex-shader-object" type="x-shader/x-vertex">
+    attribute vec3 vPosition;
+    attribute vec3 vNormal;
+
+    
+    uniform mediump mat4 mvp;
+
+    varying mediump vec3 normal;
+    varying mediump vec3 pos;
+
+
+    void main() { 
+        normal = vNormal;
+        pos = vPosition;
+        gl_Position = mvp * vec4(vPosition,1); 
+    }
+
+</script>
+<script id="fragment-shader-object" type="x-shader/x-fragment">
+    
+    varying mediump vec3 normal;
+    varying mediump vec3 pos;
+    uniform mediump vec3 lightDir;
+    uniform mediump vec3 cameraPos;
+
+    void main() { 
+        mediump float dotNL = dot(normalize(-lightDir), normalize(normal));
+        mediump vec3 color = vec3(0.1,0.1,0.1);
+        if(dotNL > 0.0)
+        {
+            color += vec3(0.4,0.4,0.4) * dotNL;
+
+            mediump vec3 toEye = cameraPos - pos;
+            mediump vec3 reflect = normalize(lightDir) - 2. * (dot(normalize(normal),normalize(lightDir))) * normalize(normal);
+            mediump float specFact = pow(clamp(dot(toEye,reflect),0.0,1.0),16.0);
+            color += specFact * vec3(0.2,0.2,0.2);
+        }
+        gl_FragColor = vec4(color,1.0); 
+    }
+    
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="../Common/webgl-obj-loader.js"></script>
+<script type="text/javascript" src="game-object.js"></script>
+<script type="text/javascript" src="camera.js"></script>
+<script type="text/javascript" src="light-obj.js"></script>
+
+</head>
+
+<body>
+    <canvas id="gl-canvas" width="1024" height="512">
+        Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+</body>
+
+</html>
