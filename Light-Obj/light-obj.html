@@ -37,7 +37,7 @@
         {
             color += vec3(0.4,0.4,0.4) * dotNL;
 
-            mediump vec3 toEye = cameraPos - pos;
+            mediump vec3 toEye = normalize(cameraPos - pos);
             mediump vec3 reflect = normalize(lightDir) - 2. * (dot(normalize(normal),normalize(lightDir))) * normalize(normal);
             mediump float specFact = pow(clamp(dot(toEye,reflect),0.0,1.0),16.0);
             color += specFact * vec3(0.2,0.2,0.2);

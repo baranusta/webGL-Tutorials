@@ -8,7 +8,7 @@ class GameObject
         program.screenSize = gl.getUniformLocation(program, "screenSize");
 
         program.vpos_attr = gl.getAttribLocation(program, 'vPosition');
-        gl.enableVertexAttribArray(program.vao_attr);
+        gl.enableVertexAttribArray(program.vpos_attr);
 
         program.vnor_attr = gl.getAttribLocation(program, "vNormal");
         gl.enableVertexAttribArray(program.vnor_attr);
