@@ -2,8 +2,9 @@ class GameObject
 {
     constructor(mesh){
         var program = initShaders(gl, 'vertex-shader-object', 'fragment-shader-object');
-        program.mvp = gl.getUniformLocation(program, "mvp");
-        program.lightDir = gl.getUniformLocation(program, "lightDir");
+        program.model = gl.getUniformLocation(program, "model");
+        program.viewprojection = gl.getUniformLocation(program, "view_projection");
+        program.lightPos = gl.getUniformLocation(program, "lightPos");
         program.cameraPos = gl.getUniformLocation(program, "cameraPos");
         program.screenSize = gl.getUniformLocation(program, "screenSize");
 
@@ -18,7 +19,7 @@ class GameObject
         this.model = mat4();
     }
 
-    draw(cameraPos, lightDir, viewProjection, model){
+    draw(cameraPos, lightPos, viewProjection, model){
         model = model || mat4();
         model = mult(this.model, model);
         viewProjection = viewProjection || mat4();
@@ -26,8 +27,9 @@ class GameObject
         gl.useProgram(this.program);
 
         
-        gl.uniformMatrix4fv(this.program.mvp, false, flatten(mult(viewProjection, model)));
-        gl.uniform3f(this.program.lightDir, lightDir[0], lightDir[1], lightDir[2]);
+        gl.uniformMatrix4fv(this.program.model, false, flatten( model));
+        gl.uniformMatrix4fv(this.program.viewprojection, false, flatten(viewProjection));
+        gl.uniform3f(this.program.lightPos, lightPos[0], lightPos[1], lightPos[2]);
         gl.uniform3f(this.program.cameraPos, cameraPos[0], cameraPos[1], cameraPos[2]);
         
         gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh.vertexBuffer);

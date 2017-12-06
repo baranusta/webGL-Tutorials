@@ -10,35 +10,38 @@
     attribute vec3 vNormal;
 
     
-    uniform mediump mat4 mvp;
+    uniform mediump mat4 model;
+    uniform mediump mat4 view_projection;
 
     varying mediump vec3 normal;
-    varying mediump vec3 pos;
+    varying mediump vec4 pos;
 
 
     void main() { 
         normal = vNormal;
-        pos = vPosition;
-        gl_Position = mvp * vec4(vPosition,1); 
+        pos = model * vec4(vPosition,1);
+        gl_Position = view_projection * pos; 
+        pos /= pos.w;
     }
 
 </script>
 <script id="fragment-shader-object" type="x-shader/x-fragment">
     
     varying mediump vec3 normal;
-    varying mediump vec3 pos;
-    uniform mediump vec3 lightDir;
+    varying mediump vec4 pos;
+    uniform mediump vec3 lightPos;
     uniform mediump vec3 cameraPos;
 
     void main() { 
-        mediump float dotNL = dot(normalize(-lightDir), normalize(normal));
+        mediump vec3 lightDir = normalize(lightPos - pos.xyz);
+        mediump float dotNL = dot(lightDir, normalize(normal));
         mediump vec3 color = vec3(0.1,0.1,0.1);
         if(dotNL > 0.0)
         {
             color += vec3(0.4,0.4,0.4) * dotNL;
 
-            mediump vec3 toEye = normalize(cameraPos - pos);
-            mediump vec3 reflect = normalize(lightDir) - 2. * (dot(normalize(normal),normalize(lightDir))) * normalize(normal);
+            mediump vec3 toEye = lightDir;
+            mediump vec3 reflect = -lightDir - 2. * (dot(normalize(normal),-lightDir)) * normalize(normal);
             mediump float specFact = pow(clamp(dot(toEye,reflect),0.0,1.0),16.0);
             color += specFact * vec3(0.2,0.2,0.2);
         }

@@ -1,10 +1,10 @@
-var sphere;
+var sphere1,sphere2;
 var models = {};
 
-var lightDir = vec3(0, -1, -1);
+var lightDir = vec3(0, 0, 2);
 
 var at = vec3(0, 0, 0);
-var eye = vec3(0, 0, 5);
+var eye = vec3(0, 0, 10);
 var toCam = subtract(eye, at);
 var proj;
 var view;
@@ -13,7 +13,10 @@ var view;
 function modelLoad(meshes) {
     models.meshes = meshes;
     OBJ.initMeshBuffers(gl, models.meshes.sphere);
-    sphere = new GameObject(models.meshes.sphere);
+    sphere1 = new GameObject(models.meshes.sphere);
+    sphere1.model = mult(sphere1.model, translate(-1.0,0,0));
+    sphere2 = new GameObject(models.meshes.sphere);
+    sphere2.model = mult(sphere2.model, translate(1.0,0,0));
     gameLoop();
 }
 
@@ -45,12 +48,32 @@ const gameLoop = function () {
     if (!gameEnded) {
 
         view = lookAt(add(at, toCam), at, [0, 1, 0]);
-        proj = perspective(45, screenSize[0] / screenSize[1], 0.1, 10);
+        proj = perspective(20, screenSize[0] / screenSize[1], 0.1, 10);
 
-        sphere.draw(eye, lightDir, mult(proj,view));
+        sphere1.draw(vec3(0,1,2), lightDir, mult(proj,view));
+        sphere2.draw(vec3(0,1,2), lightDir, mult(proj,view));
         window.requestAnimationFrame(gameLoop);
     }
     else {
         window.cancelAnimationFrame(gameLoop);
     }
+}
+
+
+document.onkeydown = function(e)
+{
+    console.log(e.keyCode);
+    if(e.keyCode == 38){ 
+        sphere1.model = mult(sphere1.model, translate(-0.1,0,0));
+    }
+    if(e.keyCode == 40){
+        sphere1.model = mult(sphere1.model, translate(0.1,0,0));
+    }
+    if(e.keyCode == 38){
+        player2PressedU = true;
+    }
+    if(e.keyCode == 40){
+        player2PressedD = true;
+    }
+    
 }
