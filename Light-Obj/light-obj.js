@@ -50,6 +50,7 @@ const gameLoop = function () {
         view = lookAt(add(at, toCam), at, [0, 1, 0]);
         proj = perspective(20, screenSize[0] / screenSize[1], 0.1, 10);
 
+        sphere1.model = mult(sphere1.model, rotateZ(1));
         sphere1.draw(vec3(0,1,2), lightDir, mult(proj,view));
         sphere2.draw(vec3(0,1,2), lightDir, mult(proj,view));
         window.requestAnimationFrame(gameLoop);

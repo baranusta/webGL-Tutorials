@@ -18,10 +18,13 @@
 
 
     void main() { 
-        normal = vNormal;
+        mediump vec3 normal_pos = vPosition + vNormal;
+        mediump vec4 n_pos = model * vec4(normal_pos,1);
         pos = model * vec4(vPosition,1);
+        n_pos /= n_pos.w;
         gl_Position = view_projection * pos; 
         pos /= pos.w;
+        normal = normalize(n_pos.xyz - pos.xyz);
     }
 
 </script>
@@ -34,14 +37,14 @@
 
     void main() { 
         mediump vec3 lightDir = normalize(lightPos - pos.xyz);
-        mediump float dotNL = dot(lightDir, normalize(normal));
+        mediump float dotNL = dot(lightDir, normal);
         mediump vec3 color = vec3(0.1,0.1,0.1);
         if(dotNL > 0.0)
         {
             color += vec3(0.4,0.4,0.4) * dotNL;
 
-            mediump vec3 toEye = lightDir;
-            mediump vec3 reflect = -lightDir - 2. * (dot(normalize(normal),-lightDir)) * normalize(normal);
+            mediump vec3 toEye = normalize(cameraPos - pos.xyz);
+            mediump vec3 reflect = -lightDir - 2. * (dot(normal,-lightDir) * normal);
             mediump float specFact = pow(clamp(dot(toEye,reflect),0.0,1.0),16.0);
             color += specFact * vec3(0.2,0.2,0.2);
         }

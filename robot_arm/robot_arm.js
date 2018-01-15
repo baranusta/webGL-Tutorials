@@ -17,8 +17,8 @@ window.onload = function () {
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0, 1.0, 0, 1);
 
-    drawRobotArm();
-    //drawAnimatedSnake();
+    //drawRobotArm();
+    drawAnimatedSnake();
 
 }
 
